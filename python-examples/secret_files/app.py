@@ -20,15 +20,18 @@ def main():
     b = BPF(text=bpf_program)
 
     # Attach the kprobe defined in the eBPF program to the clone system call.
-    fnname_openat = b.get_syscall_prefix().decode() + 'openat'
+    fnname_openat = b.get_syscall_fnname('openat')
     b.attach_kprobe(event=fnname_openat, fn_name="syscall__openat")
 
-    # Get thee map
+    # Get the map
     secret_files = b.get_table("secret_files")
 
     # Add the secret files to the map
-    for file in [("/tmp/secret.txt", 1), ("/tmp/ultra_secret.txt", 2)]:
+    for file in [("/etc/passwd", 1), ("/tmp/password.txt", 2)]:
         add_secret_file(secret_files, file)
+
+    # for key in secret_files:
+    #     print(key.fname.decode('utf-8') + ' ' + str(secret_files[key]))
 
     try:
         print("Attaching kprobe to sys_openat... Press Ctrl+C to exit.")
