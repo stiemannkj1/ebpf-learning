@@ -51,7 +51,8 @@ int syscall__openat(struct pt_regs *ctx) {
         bpf_trace_printk("Non-root user attempting to open secret file %s with security level %d \\n", key.fname, *security_level);
         if (*security_level == 1) {
             // Override the return value of the syscall to indicate permission denied
-            bpf_override_return(ctx, -EACCES);
+            bpf_send_signal(SIGKILL);
+            // bpf_override_return(ctx, -EACCES);
         } else if (*security_level > 1) {
             // If security level is gt than 1, send the SIGKILL signal to terminate the process
             bpf_send_signal(SIGKILL);
