@@ -5,6 +5,8 @@
 // Define the SIGKILL signal, which instructs the system to terminate the process
 #define SIGKILL 9
 
+#define NAME_MAX 255
+
 // TODO
 // #define PT_REGS_PARM1(x) ((x)->di)
 // #define PT_REGS_PARM2(x) ((x)->si)
